@@ -1,83 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Billing System</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" integrity="sha256-2XFplPlrFClt0bIdPgpz8H7ojnk10H69xRqd9+uTShA=" crossorigin="anonymous" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Billing System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css"/>
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+
+    header {
+      padding: 20px;
+      text-align: center;
+      background-color: #0d6efd;
+      color: white;
+      margin-bottom: 30px;
+    }
+
+    .form-control:focus {
+      box-shadow: none;
+      border-color: #0d6efd;
+    }
+
+    .btn-primary {
+      background-color: #0d6efd;
+    }
+
+    .table thead {
+      background-color: #e9ecef;
+    }
+
+    .container {
+      max-width: 1200px;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Billing System </h1>
-        </header>
-        <main>
-            <div class="grid-container">
-                <div class="column" id="form-column">
-                    <form id="billing-form">
-                        <div class="form-group">
-                            <label for="customer-name">Customer Name</label>
-                            <input type="text" id="customer-name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="dealer-name">Dealer Name</label>
-                            <input type="text" id="dealer-name" value="Ravi M" readonly required>
-                        </div>
-                        <div class="form-group">
-                            <label for="item-description">Item Description</label>
-                            <input type="text" id="item-description" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="item-quantity">Quantity</label>
-                            <input type="number" id="item-quantity" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="item-price">Price</label>
-                            <input type="number" id="item-price" required>
-                        </div>
-                        <button type="button" onclick="addItem()">Add Item</button>
-                    </form>
-                </div>
 
-                <div class="column" id="details-column">
-                    <div id="invoice-details-container">
-                        <div id="invoice-details">
-                            <h2>Invoice Details</h2>
-                            <div id="invoice-content">
-                                <p><strong>Customer Name:</strong> <span id="invoice-customer-name"></span></p>
-                                <p><strong>Dealer Name:</strong> <span id="invoice-dealer-name"></span></p>
-                                <p><strong>Date and Time:</strong> <span id="invoice-date-time"></span></p>
-                                <div id="invoice-table">
-                                    <table class="table align-middle table-nowrap table-centered mb-0">
-                                        <thead>
-                                            <tr>
-                                                <th style="width: 70px;">No.</th>
-                                                <th>Item</th>
-                                                <th>Price</th>
-                                                <th>Quantity</th>
-                                                <th class="text-end" style="width: 120px;">Total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="invoice-items">
-                                            <!-- Invoice items will be dynamically added here -->
-                                        </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <td colspan="4" class="text-end"><strong>Total Amount:</strong></td>
-                                                <td class="text-end" id="total-amount">$0.00</td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <button onclick="printInvoice()" class="btn btn-primary mt-4"><i class="fa fa-print me-1"></i> Print Invoice</button>
-                    </div>
-                </div>
+  <div class="container">
+    <header>
+      <h1>Billing System</h1>
+    </header>
+
+    <div class="row">
+      <!-- Form Column -->
+      <div class="col-md-5 mb-4">
+        <div class="card shadow-sm">
+          <div class="card-header bg-primary text-white">
+            <strong>Enter Billing Details</strong>
+          </div>
+          <div class="card-body">
+            <form id="billing-form">
+              <div class="mb-3">
+                <label for="customer-name" class="form-label">Customer Name</label>
+                <input type="text" id="customer-name" class="form-control" required>
+              </div>
+              <div class="mb-3">
+                <label for="dealer-name" class="form-label">Dealer Name</label>
+                <input type="text" id="dealer-name" class="form-control" value="Ravi M" readonly required>
+              </div>
+              <div class="mb-3">
+                <label for="item-description" class="form-label">Item Description</label>
+                <input type="text" id="item-description" class="form-control" required>
+              </div>
+              <div class="mb-3">
+                <label for="item-quantity" class="form-label">Quantity</label>
+                <input type="number" id="item-quantity" class="form-control" required>
+              </div>
+              <div class="mb-3">
+                <label for="item-price" class="form-label">Price</label>
+                <input type="number" id="item-price" class="form-control" required>
+              </div>
+              <button type="button" onclick="addItem()" class="btn btn-success w-100">
+                <i class="fas fa-plus me-1"></i> Add Item
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Invoice Column -->
+      <div class="col-md-7">
+        <div class="card shadow-sm">
+          <div class="card-header bg-primary text-white">
+            <strong>Invoice Details</strong>
+          </div>
+          <div class="card-body">
+            <p><strong>Customer Name:</strong> <span id="invoice-customer-name"></span></p>
+            <p><strong>Dealer Name:</strong> <span id="invoice-dealer-name">Ravi M</span></p>
+            <p><strong>Date and Time:</strong> <span id="invoice-date-time"></span></p>
+
+            <div class="table-responsive">
+              <table class="table table-bordered table-hover">
+                <thead class="table-light">
+                  <tr>
+                    <th>No.</th>
+                    <th>Item</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th class="text-end">Total</th>
+                  </tr>
+                </thead>
+                <tbody id="invoice-items">
+                  <!-- Dynamically added rows -->
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="4" class="text-end"><strong>Total Amount:</strong></td>
+                    <td class="text-end" id="total-amount">$0.00</td>
+                  </tr>
+                </tfoot>
+              </table>
             </div>
-        </main>
+
+            <button onclick="printInvoice()" class="btn btn-primary mt-3 float-end">
+              <i class="fa fa-print me-1"></i> Print Invoice
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
-    <script src="scripts.js"></script>
+  </div>
+
+  <!-- Bootstrap Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Your Scripts -->
+  <script src="scripts.js"></script>
 </body>
 </html>
