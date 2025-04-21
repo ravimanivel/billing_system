@@ -19,7 +19,7 @@ function addItem() {
     newRow.innerHTML = `
         <td>${document.getElementById("invoice-items").rows.length + 1}</td>
         <td>${itemName}</td>
-        <td>$${itemPrice.toFixed(2)}</td>
+        <td>₹${itemPrice.toFixed(2)}</td>
         <td>${itemQuantity}</td>
         <td class="text-end">$${itemTotal.toFixed(2)}</td>
     `;
@@ -40,16 +40,24 @@ function getCurrentDateTime() {
 function updateTotal(itemTotal) {
     var currentTotal = parseFloat(document.getElementById("total-amount").innerHTML.replace("$", ""));
     var newTotal = currentTotal + itemTotal;
-    document.getElementById("total-amount").innerHTML = `$${newTotal.toFixed(2)}`;
+    document.getElementById("total-amount").innerHTML = `₹${newTotal.toFixed(2)}`;
 }
 
 function printInvoice() {
-    var printContents = document.getElementById("invoice-details-container").innerHTML;
-    var originalContents = document.body.innerHTML;
+    var container = document.getElementById("invoice-details-container");
 
-    document.body.innerHTML = printContents;
+    if (!container) {
+        alert("Invoice details container not found!");
+        return;
+    }
 
-    window.print();
-
-    document.body.innerHTML = originalContents;
+    var printWindow = window.open('', '', 'height=600,width=800');
+    printWindow.document.write('<html><head><title>Print Invoice</title>');
+    printWindow.document.write('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">');
+    printWindow.document.write('</head><body>');
+    printWindow.document.write(container.innerHTML);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.print();
 }
+
