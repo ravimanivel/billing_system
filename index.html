@@ -2,189 +2,244 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Billing System</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
-    body {
-      background-color: #f8f9fa;
+    .container { max-width: 1200px; margin-top: 20px; }
+    .invoice-box { background: #f8f9fa; padding: 20px; border-radius: 10px; }
+    @media (max-width: 768px) {
+      .row > div { margin-bottom: 20px; }
     }
-
-    header {
-      padding: 20px;
-      text-align: center;
-      background-color: #0d6efd;
-      color: white;
-      margin-bottom: 30px;
-    }
-
-    .form-control:focus {
-      box-shadow: none;
-      border-color: #0d6efd;
-    }
-
-    .btn-primary {
-      background-color: #0d6efd;
-    }
-
-    .table thead {
-      background-color: #e9ecef;
-    }
-
-    .container {
-      max-width: 1200px;
-    }
-
     @media print {
-      body * {
-        visibility: hidden;
-      }
-      #print-section, #print-section * {
+      body * { visibility: hidden; }
+      #invoice-section, #invoice-section * {
         visibility: visible;
       }
-      #print-section {
+      #invoice-section {
         position: absolute;
         left: 0;
         top: 0;
         width: 100%;
       }
-      .no-print {
-        display: none !important;
-      }
     }
   </style>
 </head>
-<body>
+<body class="bg-light">
 
-  <div class="container" id="invoice-details-container">
-    <header>
-      <h1>Billing System</h1>
-    </header>
-
-    <div class="row">
-      <!-- Form Column -->
-      <div class="col-md-5 mb-4 no-print">
-        <div class="card shadow-sm">
-          <div class="card-header bg-primary text-white">
-            <strong>Enter Billing Details</strong>
-          </div>
-          <div class="card-body">
-            <form id="billing-form">
-              <div class="mb-3">
-                <label for="customer-name" class="form-label">Customer Name</label>
-                <input type="text" id="customer-name" class="form-control" required>
-              </div>
-              <div class="mb-3">
-                <label for="dealer-name" class="form-label">Dealer Name</label>
-                <input type="text" id="dealer-name" class="form-control" required>
-              </div>
-              <div class="mb-3">
-                <label for="item-description" class="form-label">Item Description</label>
-                <input type="text" id="item-description" class="form-control" required>
-              </div>
-              <div class="mb-3">
-                <label for="item-quantity" class="form-label">Quantity</label>
-                <input type="number" id="item-quantity" class="form-control" required>
-              </div>
-              <div class="mb-3">
-                <label for="item-price" class="form-label">Price (₹)</label>
-                <input type="number" id="item-price" class="form-control" required>
-              </div>
-              <button type="button" onclick="addItem()" class="btn btn-success w-100">
-                <i class="fas fa-plus me-1"></i> Add Item
-              </button>
-            </form>
+    <div class="container py-4">
+      <header class="text-center mb-4">
+        <h5 class="text-primary fw-bold">🧾 Billing System</h5>
+      </header>
+  
+      <div class="row g-4">
+        <!-- Billing Form -->
+        <div class="col-lg-6">
+          <div class="card shadow rounded-4">
+            <div class="card-body">
+              <form id="billing-form">
+                <h5 class="text-success mb-3">📌 Company Information</h5>
+  
+                <div class="mb-3">
+                  <label class="form-label">Company Logo</label>
+                  <input type="file" class="form-control" id="company_logo" accept="image/*">
+                </div>
+  
+                <div class="row g-2">
+                  <div class="col-md-12">
+                    <label class="form-label">Company Name</label>
+                    <input type="text" class="form-control" id="company_name"  required>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Address</label>
+                    <input type="text" class="form-control" id="company_address1"  required>
+                  </div> 
+                  <div class="col-md-6">
+                    <label class="form-label">City, State, Zip</label>
+                    <input type="text" class="form-control" id="company_city_state_zip"   required>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Country</label>
+                    <input type="text" class="form-control" id="company_country"   required>
+                  </div>
+                </div>
+  
+                <hr>
+  
+                <h5 class="text-success mt-3">👤 Customer Details</h5>
+                <label for="customer-name"> Customer Name</label>
+                <input type="text" class="form-control mb-2" id="customer-name" required>
+                <label for="dealer-name"> Dealer Name</label>
+                <input type="text" class="form-control mb-2" id="dealer-name" required>
+                <label for="invoice_num"> Invoice Number</label>
+                <input type="text" class="form-control mb-2" id="invoice_num"  required>
+  
+                <h5 class="text-success mt-3">📦 Item Details</h5>
+                <label for="item-description"> Item Description</label>
+                <input type="text" class="form-control mb-2" id="item-description"  required>
+                <div class="row g-2">
+                  <div class="col-md-6">
+                    <label for="item-quantity"> Quantity</label>
+                    <input type="number" class="form-control" id="item-quantity" required> 
+                    <label for="item-price"> Price</label>
+                    <input type="number" class="form-control" id="item-price"  required>
+                  </div>
+                </div>
+  
+                <div class="d-grid mt-3">
+                  <button type="button" class="btn btn-primary" onclick="addItem()">➕ Add Item</button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
-      </div>
-
-      <!-- Invoice Column -->
-      <div class="col-md-7" id="print-section">
-        <div class="card shadow-sm">
-          <div class="card-header bg-primary text-white">
-            <strong>Invoice Details</strong>
-          </div>
-          <div class="card-body">
-            <p><strong>Customer Name:</strong> <span id="invoice-customer-name"></span></p>
-            <p><strong>Dealer Name:</strong> <span id="invoice-dealer-name"></span></p>
-            <p><strong>Date and Time:</strong> <span id="invoice-date-time"></span></p>
-
-            <div class="table-responsive">
-              <table class="table table-bordered table-hover">
-                <thead>
+  
+        <!-- Invoice Preview -->
+        <div class="col-lg-6">
+          <div id="invoice-section" class="bg-white border rounded-4 p-4 shadow-sm">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h4 class="text-success fw-bold mb-0" id="company-name">-</h4>
+              <img id="company-logo" class="img-fluid" style="max-width: 80px;" alt="Logo">
+            </div>
+  
+            <div class="small text-muted mb-2">
+              <p id="company-address1"></p> 
+              <p id="company-city-state-zip"></p>
+              <p id="company-country"></p>
+            </div>
+  
+            <hr>
+  
+            <div class="mb-3">
+              <p><strong>Customer:</strong> <span id="invoice-customer-name">-</span></p>
+              <p><strong>Dealer:</strong> <span id="invoice-dealer-name">-</span></p>
+              <p><strong>Invoice #:</strong> <span id="invoice-num">-</span></p>
+              <p><strong>Date:</strong> <span id="invoice-date-time">-</span></p>
+            </div>
+  
+            <div class="table-responsive mb-3">
+              <table class="table table-bordered text-center table-hover">
+                <thead class="table-light">
                   <tr>
                     <th>No.</th>
                     <th>Item</th>
-                    <th>Price (₹)</th>
-                    <th>Quantity</th>
-                    <th class="text-end">Total (₹)</th>
+                    <th>Price</th>
+                    <th>Qty</th>
+                    <th>Total</th>
                   </tr>
                 </thead>
                 <tbody id="invoice-items"></tbody>
                 <tfoot>
                   <tr>
-                    <td colspan="4" class="text-end"><strong>Total Amount:</strong></td>
-                    <td class="text-end" id="total-amount">₹0.00</td>
+                    <td colspan="4" class="text-end fw-bold">Total:</td>
+                    <td class="fw-bold" id="total-amount">₹0.00</td>
                   </tr>
                 </tfoot>
               </table>
             </div>
-
-            <button onclick="printInvoice()" class="btn btn-primary mt-3 float-end no-print">
-              <i class="fa fa-print me-1"></i> Print Invoice
-            </button>
+  
+            <p class="text-end">Thanks for your business!</p>
+            <p class="text-end"><strong>Signature:</strong> ______________________</p>
+  
+            <div class="text-center mt-3">
+              <button class="btn btn-outline-success" onclick="printInvoice()">🖨️ Print Invoice</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  
+  
+<style>
+    .invoice-box {
+  background: #fdfdfd;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 15px;
+  color: #333;
+  border-radius: 12px;
+}
 
-  <!-- Bootstrap Bundle JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    let itemCount = 0;
-    let totalAmount = 0;
+#invoice-section h3 {
+  color: #198754;
+}
 
-    function addItem() {
-      const customerName = document.getElementById("customer-name").value;
-      const dealerName = document.getElementById("dealer-name").value;
-      const itemName = document.getElementById("item-description").value;
-      const itemPrice = parseFloat(document.getElementById("item-price").value);
-      const itemQuantity = parseInt(document.getElementById("item-quantity").value);
+.table th, .table td {
+  vertical-align: middle;
+}
 
-      if (!customerName || !dealerName || !itemName || isNaN(itemPrice) || isNaN(itemQuantity)) {
-        alert("Please fill out all fields correctly.");
-        return;
-      }
+@media print {
+  .btn {
+    display: none !important;
+  }
+}
 
-      const itemTotal = itemPrice * itemQuantity;
-      itemCount++;
+</style>
+<script>
+  let invoiceItems = [];
+  let itemCount = 0;
 
-      document.getElementById("invoice-customer-name").textContent = customerName;
-      document.getElementById("invoice-dealer-name").textContent = dealerName;
-      document.getElementById("invoice-date-time").textContent = new Date().toLocaleString();
+  function addItem() {
+    // Get values from form
+    const companyLogo = document.getElementById('company_logo').files[0];
+    const logoURL = companyLogo ? URL.createObjectURL(companyLogo) : '';
+    const companyName = document.getElementById('company_name').value;
+    const companyAddress1 = document.getElementById('company_address1').value; 
+    const companyCityStateZip = document.getElementById('company_city_state_zip').value;
+    const companyCountry = document.getElementById('company_country').value;
+    const companyDetails = { name: companyName, address1: companyAddress1,   cityStateZip: companyCityStateZip, country: companyCountry };
+    const customerName = document.getElementById('customer-name').value;
+    const dealerName = document.getElementById('dealer-name').value;
+    const invoiceNum = document.getElementById('invoice_num').value;
+    const item = document.getElementById('item-description').value;
+    const qty = parseInt(document.getElementById('item-quantity').value);
+    const price = parseFloat(document.getElementById('item-price').value);
+    const total = qty * price;
 
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${itemCount}</td>
-        <td>${itemName}</td>
-        <td>₹${itemPrice.toFixed(2)}</td>
-        <td>${itemQuantity}</td>
-        <td class="text-end">₹${itemTotal.toFixed(2)}</td>
-      `;
-      document.getElementById("invoice-items").appendChild(row);
-
-      totalAmount += itemTotal;
-      document.getElementById("total-amount").textContent = `₹${totalAmount.toFixed(2)}`;
-
-      // Optional: clear inputs after add
-      document.getElementById("billing-form").reset();
+    if (!item || isNaN(qty) || isNaN(price)) {
+      alert("Please enter valid item, quantity, and price.");
+      return;
     }
 
-    function printInvoice() {
-      window.print();
-    }
-  </script>
+    // Set static invoice details
+    document.getElementById('company-logo').src = logoURL;
+    document.getElementById('company-name').innerText = companyName;
+    document.getElementById('company-address1').innerText = companyAddress1; 
+    document.getElementById('company-city-state-zip').innerText = companyCityStateZip;
+    document.getElementById('company-country').innerText = companyCountry; 
+    document.getElementById('invoice-customer-name').innerText = customerName;
+    document.getElementById('invoice-dealer-name').innerText = dealerName;
+    document.getElementById('invoice-num').innerText = invoiceNum;
+    document.getElementById('invoice-date-time').innerText = new Date().toLocaleString();
+
+    // Add to invoice items
+    itemCount++;
+    invoiceItems.push({ item, qty, price, total });
+
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${itemCount}</td>
+      <td>${item}</td>
+      <td>₹${price.toFixed(2)}</td>
+      <td>${qty}</td>
+      <td>₹${total.toFixed(2)}</td>
+    `;
+    document.getElementById('invoice-items').appendChild(row);
+
+    // Update total
+    const totalAmount = invoiceItems.reduce((sum, item) => sum + item.total, 0);
+    document.getElementById('total-amount').innerText = `₹${totalAmount.toFixed(2)}`;
+
+    // Reset item fields
+    document.getElementById('item-description').value = '';
+    document.getElementById('item-quantity').value = '';
+    document.getElementById('item-price').value = '';
+  }
+
+  function printInvoice() {
+    window.print();
+  } 
+</script>
+
 </body>
 </html>
